@@ -10,7 +10,7 @@ async function bootstrap() {
     whitelist: true,
     //throw an error if non-whitelisted properties are present
     forbidNonWhitelisted: true,
-    //enavle transformations 
+    //enable transformations
     transform: true,
   }));
   
