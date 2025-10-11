@@ -12,8 +12,8 @@ import { IsPostOwnerGuard } from '../auth/guards/is-post-owner.guard';
   providers: [
     PostsService,
     PostsRepository,
-    IsPostOwnerGuard,  // Register here since it uses PostsService
+    IsPostOwnerGuard, 
   ],
-  exports: [PostsService],  // Export for other modules to use
+  exports: [PostsService],
 })
 export class PostsModule {}

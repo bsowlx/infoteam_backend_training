@@ -7,7 +7,7 @@ import { PrismaService } from 'prisma/prisma.service';
 export class PostsRepository {
   constructor(private prisma: PrismaService) {}
 
-  async create(createPostDto: CreatePostDto) {
+  async create(createPostDto: CreatePostDto & { userId: number }) {
     return this.prisma.post.create({
         data: createPostDto,
     });
