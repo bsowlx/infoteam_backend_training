@@ -7,7 +7,6 @@ import { UsersModule } from '../users/users.module';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { LocalStrategy } from './strategies/local.strategy';
 import { jwtConstants } from './constants';
-import { IsPostOwnerGuard } from './guards/is-post-owner.guard';
 
 @Module({
   imports: [
@@ -23,10 +22,9 @@ import { IsPostOwnerGuard } from './guards/is-post-owner.guard';
   controllers: [AuthController],
   providers: [
     AuthService,
-    LocalStrategy,  // Register Local Strategy
-    JwtStrategy,    // Register JWT Strategy
-    IsPostOwnerGuard, // Register ownership guard
+    LocalStrategy,
+    JwtStrategy,
   ],
-  exports: [AuthService, IsPostOwnerGuard],
+  exports: [AuthService],  // Export guards from PostsModule instead
 })
 export class AuthModule {}
