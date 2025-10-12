@@ -19,11 +19,7 @@ export class PostsController {
   @ApiResponse({ status: 400, description: 'Invalid input data' })
   @ApiResponse({ status: 401, description: 'Unauthorized - no valid token' })
   create(@Body() createPostDto: CreatePostDto, @CurrentUser() user: any) {
-    // userId comes from authenticated user
-    return this.postsService.create({
-      ...createPostDto,
-      userId: user.id,
-    });
+    return this.postsService.create(createPostDto, user.id);
   }
 
   @Get()
