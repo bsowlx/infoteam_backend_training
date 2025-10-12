@@ -8,9 +8,22 @@ async function bootstrap() {
   
   const config = new DocumentBuilder()
     .setTitle('Posts API')
-    .setDescription('API for bulletin CRUD operations   ')
+    .setDescription('API for bulletin board with JWT authentication')
     .setVersion('1.0')
     .addTag('posts')
+    .addTag('auth')
+    // Add JWT Bearer authentication
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+        name: 'JWT',
+        description: 'Enter JWT token',
+        in: 'header',
+      },
+      'JWT-auth',
+    )
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

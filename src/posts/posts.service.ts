@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { PostsRepository } from './posts.repository';
@@ -7,8 +7,8 @@ import { PostsRepository } from './posts.repository';
 export class PostsService {
   constructor(private postsRepository: PostsRepository) {}
 
-  async create(createPostDto: CreatePostDto) {
-    return this.postsRepository.create(createPostDto);
+  async create(createPostDto: CreatePostDto, userId: number) {
+    return this.postsRepository.create(createPostDto, userId);
   }
 
   async findAll() {
@@ -30,13 +30,25 @@ export class PostsService {
     return post;
   }
 
-  async update(id: number, updatePostDto: UpdatePostDto) {
-    await this.findOneOrFail(id);
+  async update(id: number, updatePostDto: UpdatePostDto, userId: number) {
+    const post = await this.findOneOrFail(id);
+    
+    // Check ownership
+    if (post.userId !== userId) {
+      throw new ForbiddenException('You can only update your own posts');
+    }
+    
     return this.postsRepository.update(id, updatePostDto);
   }
 
-  async remove(id: number) {
-    await this.findOneOrFail(id);
+  async remove(id: number, userId: number) {
+    const post = await this.findOneOrFail(id);
+    
+    // Check ownership
+    if (post.userId !== userId) {
+      throw new ForbiddenException('You can only delete your own posts');
+    }
+    
     return this.postsRepository.remove(id);
   }
 }
