@@ -4,7 +4,6 @@ import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { IsPostOwnerGuard } from '../auth/guards/is-post-owner.guard';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 
 @ApiTags('posts')
@@ -47,7 +46,7 @@ export class PostsController {
     return this.postsService.findOne(id);
   }
 
-  @UseGuards(JwtAuthGuard, IsPostOwnerGuard)
+  @UseGuards(JwtAuthGuard)
   @Patch(':id')
   @ApiBearerAuth('JWT-auth')
   @ApiOperation({ summary: 'Update a post (only post owner)' })
@@ -57,12 +56,12 @@ export class PostsController {
   @ApiResponse({ status: 403, description: 'Forbidden - not the post owner' })
   @ApiResponse({ status: 404, description: 'Post not found' })
   @ApiResponse({ status: 400, description: 'Invalid input data' })
-  update(@Param('id', ParseIntPipe) id: number, @Body() updatePostDto: UpdatePostDto) {
-    return this.postsService.update(id, updatePostDto);
+  update(@Param('id', ParseIntPipe) id: number, @Body() updatePostDto: UpdatePostDto, @CurrentUser() user: any) {
+    return this.postsService.update(id, updatePostDto, user.id);
   }
 
 
-  @UseGuards(JwtAuthGuard, IsPostOwnerGuard)
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
   @ApiBearerAuth('JWT-auth')
   @ApiOperation({ summary: 'Delete a post (only post owner)' })
@@ -71,7 +70,7 @@ export class PostsController {
   @ApiResponse({ status: 401, description: 'Unauthorized - no valid token' })
   @ApiResponse({ status: 403, description: 'Forbidden - not the post owner' })
   @ApiResponse({ status: 404, description: 'Post not found' })
-  remove(@Param('id', ParseIntPipe) id: number) {
-    return this.postsService.remove(id);
+  remove(@Param('id', ParseIntPipe) id: number, @CurrentUser() user: any) {
+    return this.postsService.remove(id, user.id);
   }
 }

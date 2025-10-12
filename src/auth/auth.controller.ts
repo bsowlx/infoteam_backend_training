@@ -1,4 +1,4 @@
-import { Controller, Post, Body, UseGuards, Request, HttpCode, HttpStatus } from '@nestjs/common';
+import { Controller, Post, Body, UseGuards, Request, HttpCode, HttpStatus, UnauthorizedException } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
@@ -52,7 +52,7 @@ export class AuthController {
     }
   })
   @ApiResponse({ status: 401, description: 'Invalid credentials' })
-  async login(@Body() loginDto: LoginDto, @Request() req) {
+  async login(@Body() loginDto: LoginDto, @Request() req: any) {
     return this.authService.login(req.user);
   }
 
@@ -69,7 +69,6 @@ export class AuthController {
   async logout(@Request() req) {
     return {
       message: 'Logout successful. Please delete your access token.',
-      user: req.user
     };
   }
 
