@@ -14,7 +14,7 @@ export class AppController {
   @Get('google')
   @UseGuards(AuthGuard('google'))
   async googleAuth(@Req() req) {
-    // Initiates Google OAuth flow
+    //Redirects to Google’s OAuth consent screen via Passport (server-side 302)
   }
 
   @Get('google/redirect')
