@@ -1,0 +1,11 @@
+.git
+node_modules
+dist
+npm-debug.log
+Dockerfile*
+README.md
+test
+coverage
+.eslint*
+.prettier*
+.env*
