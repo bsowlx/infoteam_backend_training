@@ -14,7 +14,7 @@ export class UsersService {
     return this.usersRepository.findByEmail(email);
   }
 
-  async findById(id: number) {
+  async findById(id: string) {
     return this.usersRepository.findById(id);
   }
 

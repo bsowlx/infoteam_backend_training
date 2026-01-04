@@ -7,7 +7,7 @@ import { PrismaService } from 'prisma/prisma.service';
 export class PostsRepository {
   constructor(private prisma: PrismaService) {}
 
-  async create(createPostDto: CreatePostDto, userId: number) {
+  async create(createPostDto: CreatePostDto, userId: string) {
     return this.prisma.post.create({
       data: {
         ...createPostDto,
@@ -20,26 +20,26 @@ export class PostsRepository {
     return this.prisma.post.findMany();
   }
 
-  async findOne(id: number) {
+  async findOne(id: string) {
     return this.prisma.post.findUnique({
       where: { id },
     });
   }
 
-  async findByUserId(userId: number) {
+  async findByUserId(userId: string) {
     return this.prisma.post.findMany({
       where: { userId },
     });
   }
 
-  async update(id: number, updatePostDto: UpdatePostDto) {
+  async update(id: string, updatePostDto: UpdatePostDto) {
     return this.prisma.post.update({
       where: { id },
       data: updatePostDto,
     });
   }
 
-  async remove(id: number) {
+  async remove(id: string) {
     return this.prisma.post.delete({
       where: { id },
     });

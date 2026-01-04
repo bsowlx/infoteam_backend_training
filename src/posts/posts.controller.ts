@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseUUIDPipe, Query, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiQuery, ApiBearerAuth } from '@nestjs/swagger';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
@@ -24,9 +24,9 @@ export class PostsController {
 
   @Get()
   @ApiOperation({ summary: 'Get all posts or filter by userId' })
-  @ApiQuery({ name: 'userId', required: false, description: 'Filter posts by user ID', type: Number })
+  @ApiQuery({ name: 'userId', required: false, description: 'Filter posts by user ID', type: String })
   @ApiResponse({ status: 200, description: 'Returns all posts or filtered by userId' })
-  findAll(@Query('userId', ParseIntPipe) userId?: number) {
+  findAll(@Query('userId') userId?: string) {
     if (userId) {
       return this.postsService.findByUserId(userId);
     }
@@ -35,10 +35,10 @@ export class PostsController {
 
   @Get(':id')
   @ApiOperation({ summary: 'Get a single post by ID' })
-  @ApiParam({ name: 'id', description: 'Post ID', type: Number })
+  @ApiParam({ name: 'id', description: 'Post ID (UUID)', type: String })
   @ApiResponse({ status: 200, description: 'Returns the post' })
   @ApiResponse({ status: 404, description: 'Post not found' })
-  findOne(@Param('id', ParseIntPipe) id: number) {
+  findOne(@Param('id', ParseUUIDPipe) id: string) {
     return this.postsService.findOne(id);
   }
 
@@ -46,13 +46,13 @@ export class PostsController {
   @Patch(':id')
   @ApiBearerAuth('JWT-auth')
   @ApiOperation({ summary: 'Update a post (only post owner)' })
-  @ApiParam({ name: 'id', description: 'Post ID', type: Number })
+  @ApiParam({ name: 'id', description: 'Post ID (UUID)', type: String })
   @ApiResponse({ status: 200, description: 'Post updated successfully' })
   @ApiResponse({ status: 401, description: 'Unauthorized - no valid token' })
   @ApiResponse({ status: 403, description: 'Forbidden - not the post owner' })
   @ApiResponse({ status: 404, description: 'Post not found' })
   @ApiResponse({ status: 400, description: 'Invalid input data' })
-  update(@Param('id', ParseIntPipe) id: number, @Body() updatePostDto: UpdatePostDto, @CurrentUser() user: any) {
+  update(@Param('id', ParseUUIDPipe) id: string, @Body() updatePostDto: UpdatePostDto, @CurrentUser() user: any) {
     return this.postsService.update(id, updatePostDto, user.id);
   }
 
@@ -61,12 +61,12 @@ export class PostsController {
   @Delete(':id')
   @ApiBearerAuth('JWT-auth')
   @ApiOperation({ summary: 'Delete a post (only post owner)' })
-  @ApiParam({ name: 'id', description: 'Post ID', type: Number })
+  @ApiParam({ name: 'id', description: 'Post ID (UUID)', type: String })
   @ApiResponse({ status: 200, description: 'Post deleted successfully' })
   @ApiResponse({ status: 401, description: 'Unauthorized - no valid token' })
   @ApiResponse({ status: 403, description: 'Forbidden - not the post owner' })
   @ApiResponse({ status: 404, description: 'Post not found' })
-  remove(@Param('id', ParseIntPipe) id: number, @CurrentUser() user: any) {
+  remove(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: any) {
     return this.postsService.remove(id, user.id);
   }
 }
