@@ -7,10 +7,13 @@ import { UsersModule } from '../users/users.module';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { LocalStrategy } from './strategies/local.strategy';
 import { jwtConstants } from './constants';
+import { IdpModule } from '../idp/idp.module';
+import { IdpAuthGuard } from './guards/idp-auth.guard';
 
 @Module({
   imports: [
     UsersModule,
+    IdpModule,
     PassportModule,
     JwtModule.register({
       secret: jwtConstants.secret,
@@ -24,7 +27,8 @@ import { jwtConstants } from './constants';
     AuthService,
     LocalStrategy,
     JwtStrategy,
+    IdpAuthGuard,
   ],
-  exports: [AuthService],  // Export guards from PostsModule instead
+  exports: [AuthService, IdpAuthGuard],
 })
 export class AuthModule {}
