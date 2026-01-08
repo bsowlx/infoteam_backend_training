@@ -1,15 +1,44 @@
-import { Controller, Post, Body, UseGuards, Request, HttpCode, HttpStatus, UnauthorizedException } from '@nestjs/common';
+import { Controller, Post, Body, UseGuards, Request, HttpCode, HttpStatus } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { IdpLoginDto } from '../idp/dto/idp-login.dto';
+import { IdpAuthGuard } from './guards/idp-auth.guard';
+import { CurrentUser } from './decorators/current-user.decorator';
 
 @ApiTags('auth')
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
+
+  @Post('idp/login')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Login via IDP (exchange code for access token)' })
+  @ApiResponse({ status: 200, description: 'Successfully logged in via IDP' })
+  async idpLogin(@Body() dto: IdpLoginDto) {
+    return this.authService.idpLogin(dto);
+  }
+
+  @UseGuards(IdpAuthGuard)
+  @Post('idp/logout')
+  @HttpCode(HttpStatus.OK)
+  @ApiBearerAuth('JWT-auth')
+  @ApiOperation({
+    summary: 'Logout via IDP token (client should delete token)',
+    description:
+      'This endpoint validates the IDP access token by calling IDP /oauth/userinfo, then returns OK. Client should delete the token.',
+  })
+  @ApiResponse({ status: 200, description: 'Logout successful' })
+  @ApiResponse({ status: 401, description: 'Unauthorized - invalid token' })
+  async idpLogout(@CurrentUser() user: any) {
+    return {
+      message: 'Logout successful. Please delete your IDP access token.',
+      user,
+    };
+  }
 
   @Post('register')
   @ApiOperation({ summary: 'Register a new user account' })
