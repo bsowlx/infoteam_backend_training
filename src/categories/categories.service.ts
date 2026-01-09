@@ -25,4 +25,35 @@ export class CategoriesService {
 
     return this.categoriesRepository.remove(id);
   }
+
+  async subscribe(categoryId: string, userId: string) {
+    const category = await this.categoriesRepository.findById(categoryId);
+    if (!category) {
+      throw new NotFoundException(`Category with ID ${categoryId} not found`);
+    }
+
+    try {
+      await this.categoriesRepository.createSubscription(userId, categoryId);
+      return { message: 'Subscribed', categoryId };
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
+        throw new ConflictException('Already subscribed');
+      }
+      throw error;
+    }
+  }
+
+  async unsubscribe(categoryId: string, userId: string) {
+    const category = await this.categoriesRepository.findById(categoryId);
+    if (!category) {
+      throw new NotFoundException(`Category with ID ${categoryId} not found`);
+    }
+
+    const result = await this.categoriesRepository.removeSubscription(userId, categoryId);
+    if (result.count === 0) {
+      throw new NotFoundException('Subscription not found');
+    }
+
+    return { message: 'Unsubscribed', categoryId };
+  }
 }

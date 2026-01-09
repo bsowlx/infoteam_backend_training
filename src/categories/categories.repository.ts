@@ -22,4 +22,22 @@ export class CategoriesRepository {
       where: { id },
     });
   }
+
+  async createSubscription(userId: string, categoryId: string) {
+    return this.prisma.categorySubscription.create({
+      data: {
+        userId,
+        categoryId,
+      },
+    });
+  }
+
+  async removeSubscription(userId: string, categoryId: string) {
+    return this.prisma.categorySubscription.deleteMany({
+      where: {
+        userId,
+        categoryId,
+      },
+    });
+  }
 }

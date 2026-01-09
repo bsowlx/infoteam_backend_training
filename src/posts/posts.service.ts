@@ -1,4 +1,5 @@
-import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
+import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { PostsRepository } from './posts.repository';
@@ -8,7 +9,14 @@ export class PostsService {
   constructor(private postsRepository: PostsRepository) {}
 
   async create(createPostDto: CreatePostDto, userId: string) {
-    return this.postsRepository.create(createPostDto, userId);
+    try {
+      return await this.postsRepository.create(createPostDto, userId);
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2003') {
+        throw new NotFoundException('Category not found');
+      }
+      throw error;
+    }
   }
 
   async findAll() {
@@ -38,7 +46,14 @@ export class PostsService {
       throw new ForbiddenException('You can only update your own posts');
     }
     
-    return this.postsRepository.update(id, updatePostDto);
+    try {
+      return await this.postsRepository.update(id, updatePostDto);
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2003') {
+        throw new NotFoundException('Category not found');
+      }
+      throw error;
+    }
   }
 
   async remove(id: string, userId: string) {
