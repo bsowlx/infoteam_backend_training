@@ -8,6 +8,7 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { GoogleStrategy } from './auth/strategies/google.strategy';
 import { PassportModule } from '@nestjs/passport';
+import { CategoriesModule } from './categories/categories.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { PassportModule } from '@nestjs/passport';
       isGlobal: true, // Makes ConfigModule available everywhere
     }),
     PostsModule, 
+    CategoriesModule,
     PrismaModule, 
     AuthModule, 
     UsersModule, 
