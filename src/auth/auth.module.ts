@@ -29,6 +29,6 @@ import { IdpAuthGuard } from './guards/idp-auth.guard';
     JwtStrategy,
     IdpAuthGuard,
   ],
-  exports: [AuthService, IdpAuthGuard],
+  exports: [AuthService, IdpAuthGuard, IdpModule, UsersModule],
 })
 export class AuthModule {}
