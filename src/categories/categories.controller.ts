@@ -16,7 +16,7 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { IdpAuthGuard } from '../auth/guards/idp-auth.guard';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
@@ -26,7 +26,7 @@ import { CreateCategoryDto } from './dto/create-category.dto';
 export class CategoriesController {
   constructor(private readonly categoriesService: CategoriesService) {}
 
-  @UseGuards(IdpAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Post()
   @ApiBearerAuth('JWT-auth')
   @ApiOperation({ summary: 'Create a category (requires authentication)' })
@@ -36,7 +36,7 @@ export class CategoriesController {
     return this.categoriesService.create(dto.slug);
   }
 
-  @UseGuards(IdpAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
   @HttpCode(HttpStatus.OK)
   @ApiBearerAuth('JWT-auth')
@@ -50,7 +50,7 @@ export class CategoriesController {
     return this.categoriesService.remove(id);
   }
 
-  @UseGuards(IdpAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Post(':id/subscribe')
   @HttpCode(HttpStatus.OK)
   @ApiBearerAuth('JWT-auth')
@@ -65,7 +65,7 @@ export class CategoriesController {
     return this.categoriesService.subscribe(id, user.id);
   }
 
-  @UseGuards(IdpAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Delete(':id/subscribe')
   @HttpCode(HttpStatus.OK)
   @ApiBearerAuth('JWT-auth')

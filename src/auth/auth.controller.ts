@@ -19,7 +19,6 @@ import { LoginDto } from './dto/login.dto';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { IdpLoginDto } from '../idp/dto/idp-login.dto';
-import { IdpAuthGuard } from './guards/idp-auth.guard';
 import { CurrentUser } from './decorators/current-user.decorator';
 
 @ApiTags('auth')
@@ -29,26 +28,31 @@ export class AuthController {
 
   @Post('idp/login')
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'Login via IDP (exchange code for access token)' })
-  @ApiResponse({ status: 200, description: 'Successfully logged in via IDP' })
+  @ApiOperation({
+    summary: 'Login via IDP (exchange code, then mint internal JWT)',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Successfully logged in (internal JWT returned)',
+  })
   async idpLogin(@Body() dto: IdpLoginDto) {
     return this.authService.idpLogin(dto);
   }
 
-  @UseGuards(IdpAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Post('idp/logout')
   @HttpCode(HttpStatus.OK)
   @ApiBearerAuth('JWT-auth')
   @ApiOperation({
-    summary: 'Logout via IDP token (client should delete token)',
+    summary: 'Logout (client should delete token)',
     description:
-      'This endpoint validates the IDP access token by calling IDP /oauth/userinfo, then returns OK. Client should delete the token.',
+      'This endpoint validates the internal JWT, then returns OK. Client should delete the token.',
   })
   @ApiResponse({ status: 200, description: 'Logout successful' })
   @ApiResponse({ status: 401, description: 'Unauthorized - invalid token' })
   async idpLogout(@CurrentUser() user: any) {
     return {
-      message: 'Logout successful. Please delete your IDP access token.',
+      message: 'Logout successful. Please delete your access token.',
       user,
     };
   }

@@ -46,22 +46,11 @@ export class AuthService {
       name: userInfo.name,
     });
 
-    return {
-      user: {
-        id: user.id,
-        sub: user.sub,
-        email: user.email,
-        name: user.name,
-      },
-      accessToken: tokenData.access_token,
-      tokenType: tokenData.token_type,
-      expiresIn: tokenData.expires_in,
-      scope: tokenData.scope,
-    };
+    return this.login(user);
   }
 
   async login(user: any) {
-    const payload = { sub: user.id, email: user.email };
+    const payload = { sub: user.id, email: user.email, name: user.name };
 
     return {
       user: {

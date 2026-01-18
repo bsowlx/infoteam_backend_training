@@ -21,7 +21,7 @@ import {
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
-import { IdpAuthGuard } from '../auth/guards/idp-auth.guard';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 
 @ApiTags('posts')
@@ -29,7 +29,7 @@ import { CurrentUser } from '../auth/decorators/current-user.decorator';
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
-  @UseGuards(IdpAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Post()
   @ApiBearerAuth('JWT-auth')
   @ApiOperation({ summary: 'Create a new post (requires authentication)' })
@@ -68,7 +68,7 @@ export class PostsController {
     return this.postsService.findOne(id);
   }
 
-  @UseGuards(IdpAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Patch(':id')
   @ApiBearerAuth('JWT-auth')
   @ApiOperation({ summary: 'Update a post (only post owner)' })
@@ -86,7 +86,7 @@ export class PostsController {
     return this.postsService.update(id, updatePostDto, user.id);
   }
 
-  @UseGuards(IdpAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
   @ApiBearerAuth('JWT-auth')
   @ApiOperation({ summary: 'Delete a post (only post owner)' })

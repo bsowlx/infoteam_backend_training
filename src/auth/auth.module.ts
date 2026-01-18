@@ -8,7 +8,7 @@ import { JwtStrategy } from './strategies/jwt.strategy';
 import { LocalStrategy } from './strategies/local.strategy';
 import { jwtConstants } from './constants';
 import { IdpModule } from '../idp/idp.module';
-import { IdpAuthGuard } from './guards/idp-auth.guard';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
 @Module({
   imports: [
@@ -23,7 +23,7 @@ import { IdpAuthGuard } from './guards/idp-auth.guard';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, LocalStrategy, JwtStrategy, IdpAuthGuard],
-  exports: [AuthService, IdpAuthGuard, IdpModule, UsersModule],
+  providers: [AuthService, LocalStrategy, JwtStrategy, JwtAuthGuard],
+  exports: [AuthService, JwtAuthGuard, IdpModule, UsersModule],
 })
 export class AuthModule {}
