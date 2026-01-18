@@ -27,7 +27,9 @@ export class IdpAuthGuard implements CanActivate {
 
     const [scheme, token] = authorization.split(' ');
     if (scheme !== 'Bearer' || !token) {
-      throw new UnauthorizedException('Authorization header must be Bearer token');
+      throw new UnauthorizedException(
+        'Authorization header must be Bearer token',
+      );
     }
 
     const userInfo = await this.idpService.validateAccessToken(token);

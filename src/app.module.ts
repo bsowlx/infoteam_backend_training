@@ -15,12 +15,12 @@ import { CategoriesModule } from './categories/categories.module';
     ConfigModule.forRoot({
       isGlobal: true, // Makes ConfigModule available everywhere
     }),
-    PostsModule, 
+    PostsModule,
     CategoriesModule,
-    PrismaModule, 
-    AuthModule, 
-    UsersModule, 
-    PassportModule
+    PrismaModule,
+    AuthModule,
+    UsersModule,
+    PassportModule,
   ],
   controllers: [AppController],
   providers: [AppService, GoogleStrategy],

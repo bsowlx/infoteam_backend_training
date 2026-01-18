@@ -17,18 +17,13 @@ import { IdpAuthGuard } from './guards/idp-auth.guard';
     PassportModule,
     JwtModule.register({
       secret: jwtConstants.secret,
-      signOptions: { 
+      signOptions: {
         expiresIn: '24h',
       },
     }),
   ],
   controllers: [AuthController],
-  providers: [
-    AuthService,
-    LocalStrategy,
-    JwtStrategy,
-    IdpAuthGuard,
-  ],
+  providers: [AuthService, LocalStrategy, JwtStrategy, IdpAuthGuard],
   exports: [AuthService, IdpAuthGuard, IdpModule, UsersModule],
 })
 export class AuthModule {}

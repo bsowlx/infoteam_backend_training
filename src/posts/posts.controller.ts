@@ -1,5 +1,23 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ParseUUIDPipe, Query, UseGuards } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiQuery, ApiBearerAuth } from '@nestjs/swagger';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  ParseUUIDPipe,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiParam,
+  ApiQuery,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
@@ -24,8 +42,16 @@ export class PostsController {
 
   @Get()
   @ApiOperation({ summary: 'Get all posts or filter by userId' })
-  @ApiQuery({ name: 'userId', required: false, description: 'Filter posts by user ID', type: String })
-  @ApiResponse({ status: 200, description: 'Returns all posts or filtered by userId' })
+  @ApiQuery({
+    name: 'userId',
+    required: false,
+    description: 'Filter posts by user ID',
+    type: String,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Returns all posts or filtered by userId',
+  })
   findAll(@Query('userId') userId?: string) {
     if (userId) {
       return this.postsService.findByUserId(userId);
@@ -52,10 +78,13 @@ export class PostsController {
   @ApiResponse({ status: 403, description: 'Forbidden - not the post owner' })
   @ApiResponse({ status: 404, description: 'Post not found' })
   @ApiResponse({ status: 400, description: 'Invalid input data' })
-  update(@Param('id', ParseUUIDPipe) id: string, @Body() updatePostDto: UpdatePostDto, @CurrentUser() user: any) {
+  update(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() updatePostDto: UpdatePostDto,
+    @CurrentUser() user: any,
+  ) {
     return this.postsService.update(id, updatePostDto, user.id);
   }
-
 
   @UseGuards(IdpAuthGuard)
   @Delete(':id')

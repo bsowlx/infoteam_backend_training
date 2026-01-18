@@ -1,22 +1,31 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { PrismaService } from 'prisma/prisma.service';
+import { throwMappedPrismaError } from 'prisma/prisma-errors';
 
 @Injectable()
 export class PostsRepository {
   constructor(private prisma: PrismaService) {}
 
   async create(createPostDto: CreatePostDto, userId: string) {
-    return this.prisma.post.create({
-      data: {
-        ...createPostDto,
-        userId,
-      },
-      include: {
-        category: true,
-      },
-    });
+    try {
+      return await this.prisma.post.create({
+        data: {
+          ...createPostDto,
+          userId,
+        },
+        include: {
+          category: true,
+        },
+      });
+    } catch (error) {
+      throwMappedPrismaError(error, {
+        P2003: () => {
+          throw new NotFoundException('Category not found');
+        },
+      });
+    }
   }
 
   async findAll() {
@@ -46,13 +55,21 @@ export class PostsRepository {
   }
 
   async update(id: string, updatePostDto: UpdatePostDto) {
-    return this.prisma.post.update({
-      where: { id },
-      data: updatePostDto,
-      include: {
-        category: true,
-      },
-    });
+    try {
+      return await this.prisma.post.update({
+        where: { id },
+        data: updatePostDto,
+        include: {
+          category: true,
+        },
+      });
+    } catch (error) {
+      throwMappedPrismaError(error, {
+        P2003: () => {
+          throw new NotFoundException('Category not found');
+        },
+      });
+    }
   }
 
   async remove(id: string) {

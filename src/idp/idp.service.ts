@@ -15,7 +15,10 @@ export class IdpService {
   ) {}
 
   private get baseUrl(): string {
-    return this.configService.get<string>('IDP_BASE_URL') ?? 'https://api.idp.gistory.me';
+    return (
+      this.configService.get<string>('IDP_BASE_URL') ??
+      'https://api.idp.gistory.me'
+    );
   }
 
   private get clientId(): string {
@@ -27,7 +30,10 @@ export class IdpService {
   }
 
   private buildBasicAuthHeader(): string {
-    const token = Buffer.from(`${this.clientId}:${this.clientSecret}`, 'utf8').toString('base64');
+    const token = Buffer.from(
+      `${this.clientId}:${this.clientSecret}`,
+      'utf8',
+    ).toString('base64');
     return `Basic ${token}`;
   }
 
@@ -76,11 +82,15 @@ export class IdpService {
     }
   }
 
-  async validateAccessToken(accessToken: string): Promise<IdpUserInfoResponseDto> {
+  async validateAccessToken(
+    accessToken: string,
+  ): Promise<IdpUserInfoResponseDto> {
     return this.getUserInfo(accessToken);
   }
 
-  async exchangeAuthorizationCodeFromDto(dto: IdpLoginDto): Promise<IdpTokenResponseDto> {
+  async exchangeAuthorizationCodeFromDto(
+    dto: IdpLoginDto,
+  ): Promise<IdpTokenResponseDto> {
     return this.exchangeAuthorizationCode({
       code: dto.code,
       codeVerifier: dto.codeVerifier,

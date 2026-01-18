@@ -1,4 +1,8 @@
-import { Injectable, NotImplementedException, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable,
+  NotImplementedException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '../users/users.service';
 import { RegisterDto } from './dto/register.dto';
@@ -14,19 +18,26 @@ export class AuthService {
   ) {}
 
   async register(registerDto: RegisterDto) {
-    throw new NotImplementedException('Local register is disabled. Use IDP login instead.');
+    throw new NotImplementedException(
+      'Local register is disabled. Use IDP login instead.',
+    );
   }
 
   async validateUser(email: string, password: string): Promise<any> {
-    throw new NotImplementedException('Local login is disabled. Use IDP login instead.');
+    throw new NotImplementedException(
+      'Local login is disabled. Use IDP login instead.',
+    );
   }
 
   async idpLogin(dto: IdpLoginDto) {
-    const tokenData = await this.idpService.exchangeAuthorizationCodeFromDto(dto);
+    const tokenData =
+      await this.idpService.exchangeAuthorizationCodeFromDto(dto);
     const userInfo = await this.idpService.getUserInfo(tokenData.access_token);
 
     if (!userInfo?.sub || !userInfo.email || !userInfo.name) {
-      throw new UnauthorizedException('IDP userinfo is missing required fields');
+      throw new UnauthorizedException(
+        'IDP userinfo is missing required fields',
+      );
     }
 
     const user = await this.usersService.upsertFromIdp({
@@ -51,7 +62,7 @@ export class AuthService {
 
   async login(user: any) {
     const payload = { sub: user.id, email: user.email };
-    
+
     return {
       user: {
         id: user.id,
