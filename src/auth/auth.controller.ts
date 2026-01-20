@@ -18,7 +18,7 @@ import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
-import { IdpLoginDto } from '../idp/dto/idp-login.dto';
+import { IdpLoginDto } from '@app/idp';
 import { CurrentUser } from './decorators/current-user.decorator';
 
 @ApiTags('auth')

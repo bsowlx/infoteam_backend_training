@@ -5,7 +5,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 
-import { IdpService } from '../../idp/idp.service';
+import { IdpService } from '@app/idp';
 import { UsersService } from '../../users/users.service';
 
 @Injectable()

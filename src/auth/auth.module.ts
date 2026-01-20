@@ -7,7 +7,7 @@ import { UsersModule } from '../users/users.module';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { LocalStrategy } from './strategies/local.strategy';
 import { jwtConstants } from './constants';
-import { IdpModule } from '../idp/idp.module';
+import { IdpModule } from '@app/idp';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
 @Module({

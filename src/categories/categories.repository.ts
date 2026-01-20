@@ -1,6 +1,5 @@
 import { ConflictException, Injectable } from '@nestjs/common';
-import { PrismaService } from 'prisma/prisma.service';
-import { throwMappedPrismaError } from 'prisma/prisma-errors';
+import { PrismaService, throwMappedPrismaError } from '@app/prisma';
 
 @Injectable()
 export class CategoriesRepository {

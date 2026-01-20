@@ -3,6 +3,28 @@
   "collection": "@nestjs/schematics",
   "sourceRoot": "src",
   "compilerOptions": {
-    "deleteOutDir": true
+    "deleteOutDir": true,
+    "webpack": false,
+    "tsConfigPath": "tsconfig.json"
+  },
+  "projects": {
+    "prisma": {
+      "type": "library",
+      "root": "libs/prisma",
+      "entryFile": "index",
+      "sourceRoot": "libs/prisma/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/prisma/tsconfig.lib.json"
+      }
+    },
+    "idp": {
+      "type": "library",
+      "root": "libs/idp",
+      "entryFile": "index",
+      "sourceRoot": "libs/idp/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/idp/tsconfig.lib.json"
+      }
+    }
   }
 }
