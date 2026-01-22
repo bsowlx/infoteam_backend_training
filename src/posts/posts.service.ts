@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { PostsRepository } from './posts.repository';
@@ -7,7 +11,7 @@ import { PostsRepository } from './posts.repository';
 export class PostsService {
   constructor(private postsRepository: PostsRepository) {}
 
-  async create(createPostDto: CreatePostDto, userId: number) {
+  async create(createPostDto: CreatePostDto, userId: string) {
     return this.postsRepository.create(createPostDto, userId);
   }
 
@@ -15,40 +19,40 @@ export class PostsService {
     return this.postsRepository.findAll();
   }
 
-  async findByUserId(userId: number) {
+  async findByUserId(userId: string) {
     return this.postsRepository.findByUserId(userId);
   }
 
-  async findOne(id: number) {
+  async findOne(id: string) {
     return this.postsRepository.findOne(id);
   }
-  async findOneOrFail(id: number) {
+  async findOneOrFail(id: string) {
     const post = await this.postsRepository.findOne(id);
-    if (!post) {  
+    if (!post) {
       throw new NotFoundException(`Post with ID ${id} not found`);
     }
     return post;
   }
 
-  async update(id: number, updatePostDto: UpdatePostDto, userId: number) {
+  async update(id: string, updatePostDto: UpdatePostDto, userId: string) {
     const post = await this.findOneOrFail(id);
-    
+
     // Check ownership
     if (post.userId !== userId) {
       throw new ForbiddenException('You can only update your own posts');
     }
-    
+
     return this.postsRepository.update(id, updatePostDto);
   }
 
-  async remove(id: number, userId: number) {
+  async remove(id: string, userId: string) {
     const post = await this.findOneOrFail(id);
-    
+
     // Check ownership
     if (post.userId !== userId) {
       throw new ForbiddenException('You can only delete your own posts');
     }
-    
+
     return this.postsRepository.remove(id);
   }
 }
